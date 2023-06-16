@@ -27,7 +27,7 @@ Use dramatiq to send a message to a Kafka topic with the following format:
 
 ```python
 {
-    "queue_name": "test_queue",
+    "queue_name": "testdramatiq_topic",
     "actor_name": "email_customer",
     "args": ["testing@gmail.com"],
     "kwargs": {},
