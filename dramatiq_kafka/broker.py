@@ -1,7 +1,7 @@
 from base64 import b64decode
 from typing import Any, Dict, Iterable, List, Optional, TypeVar
 
-from kafka import KafkaProducer, KafkaConsumer
+from kafka import KafkaProducer, KafkaConsumer, TopicPartition
 from dramatiq import Consumer, Message, Broker, Middleware, MessageProxy
 from collections import deque
 import json
@@ -16,6 +16,7 @@ class KafkaBroker(Broker):
         dead_letter_topic: str = None,
         group_id: str = "default",
         middleware: Optional[List[Middleware]] = None,
+        partitions: Optional[List[int]] = None,
     ) -> None:
         super().__init__(middleware=middleware)
         self.bootstrap_servers = bootstrap_servers
@@ -26,10 +27,15 @@ class KafkaBroker(Broker):
 
         self.producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
         self.consumer = KafkaConsumer(
-            topic,
             group_id=group_id,
             bootstrap_servers=bootstrap_servers,
         )
+
+        if partitions:
+            topic_partitions = [TopicPartition(topic, p) for p in partitions]
+            self.consumer.assign(topic_partitions)
+        else:
+            self.consumer.subscribe(topic)
 
     def declare_queue(self, queue_name: str) -> None:
         self.queues.append(queue_name)
@@ -59,7 +65,12 @@ class KafkaBroker(Broker):
 
 class _KafkaConsumer(Consumer):
     def __init__(
-        self, consumer, producer, topic=None, dead_letter_topic=None, requeue_topic=None
+        self,
+        consumer,
+        producer,
+        topic=None,
+        dead_letter_topic=None,
+        requeue_topic=None,
     ):
         self.consumer = consumer
         self.producer = producer
@@ -76,7 +87,7 @@ class _KafkaConsumer(Consumer):
             rejected_message = message.asdict()
             self.producer.send(
                 self.dead_letter_topic,
-                value=json.dumps(rejected_message).encode("utf-8"),
+                json.dumps(rejected_message).encode("utf-8"),
             )
         self.consumer.commit()
 
@@ -86,7 +97,7 @@ class _KafkaConsumer(Consumer):
                 requeued_message = message.asdict()
                 self.producer.send(
                     self.requeue_topic,
-                    value=json.dumps(requeued_message).encode("utf-8"),
+                    json.dumps(requeued_message).encode("utf-8"),
                 )
             self.producer.flush()
 
