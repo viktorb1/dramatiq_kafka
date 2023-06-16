@@ -1,4 +1,4 @@
-Uses kafka-python package to write a dramatiq broker for Kafka.
+Uses kafka-python package to write a Kafka broker for dramatiq.
 
 ```python
 

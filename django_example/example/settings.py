@@ -70,7 +70,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "dramatiq_kafka.wsgi.application"
+WSGI_APPLICATION = "example.wsgi.application"
 
 
 # Database

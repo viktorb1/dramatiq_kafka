@@ -4,6 +4,7 @@ from typing import Any, Dict, Iterable, List, Optional, TypeVar
 from kafka import KafkaProducer, KafkaConsumer
 from dramatiq import Consumer, Message, Broker, Middleware, MessageProxy
 from collections import deque
+import json
 
 
 class KafkaBroker(Broker):
@@ -34,7 +35,7 @@ class KafkaBroker(Broker):
         self.queues.append(queue_name)
 
     def enqueue(self, message: Message, *, delay: Optional[int] = None) -> Message:
-        self.producer.send(self.group_id, message.asdict())
+        self.producer.send(self.topic, json.dumps(message.asdict()).encode("utf-8"))
         self.producer.flush()
         return message
 
