@@ -1,8 +1,8 @@
 import dramatiq
 
 
-@dramatiq.actor(queue_name="json")
-def email_customer(test):
-    print("LOLOLOLOLOL testing")
+@dramatiq.actor(queue_name="test")
+def email_customer(email):
+    print("TESTING")
     print()
-    print("HERES THE DATA", test)
+    print("Here is the email", email)
