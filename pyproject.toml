@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dramatiq-kafka"
-version = "0.1.1"
+version = "0.1.2"
 description = "A Kafka broker for Dramatiq."
 authors = ["Viktor Babchanik <vbabchanik@ucdavis.edu>"]
 readme = "README.md"
