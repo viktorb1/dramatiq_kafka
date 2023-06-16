@@ -74,14 +74,20 @@ class _KafkaConsumer(Consumer):
     def nack(self, message: Message) -> None:
         if self.dead_letter_topic:
             rejected_message = message.asdict()
-            self.producer.send(self.dead_letter_topic, value=rejected_message.value)
+            self.producer.send(
+                self.dead_letter_topic,
+                value=json.dumps(rejected_message).encode("utf-8"),
+            )
         self.consumer.commit()
 
     def requeue(self, messages: Iterable[Message]) -> None:
         if self.requeue_topic:
             for message in messages:
                 requeued_message = message.asdict()
-                self.producer.send(self.requeue_topic, value=requeued_message.value)
+                self.producer.send(
+                    self.requeue_topic,
+                    value=json.dumps(requeued_message).encode("utf-8"),
+                )
             self.producer.flush()
 
     def __next__(self) -> Optional[Message]:
