@@ -37,4 +37,4 @@ Use dramatiq to send a message to a Kafka topic with the following format:
 }
 ```
 
-Write tasks as described in django_dramatiq's documentation and modify settings as shown in `django_example` to get started.
+Write tasks as described in django_dramatiq's documentation (i.e. create dramatiq actors in the task.py files) and modify settings as shown in `django_example` to get started. To send messages, view the views.py file for an example
