@@ -8,6 +8,14 @@ import json
 
 
 class KafkaBroker(Broker):
+    _instance = None
+
+    # singleton pattern because dramatiq_kafka AppConfig runs multiple times
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
     def __init__(
         self,
         *,
@@ -30,7 +38,6 @@ class KafkaBroker(Broker):
             group_id=group_id,
             bootstrap_servers=bootstrap_servers,
         )
-
         if partitions:
             topic_partitions = [TopicPartition(topic, p) for p in partitions]
             self.consumer.assign(topic_partitions)
