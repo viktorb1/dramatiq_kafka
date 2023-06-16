@@ -1,7 +1,7 @@
 import dramatiq
 
 
-@dramatiq.actor(queue_name="test")
+@dramatiq.actor(queue_name="testdramatiq_topic")
 def email_customer(email):
     print("TESTING")
     print()
