@@ -53,7 +53,6 @@ class KafkaBroker(Broker):
         message: Message,
         *,
         delay: Optional[int] = None,
-        topic: Optional[str] = None,
     ) -> Message:
         if delay:
             sleep(delay)
