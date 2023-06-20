@@ -58,8 +58,9 @@ class KafkaBroker(Broker):
         if delay:
             sleep(delay)
 
-        t = topic if topic else self.topic
-        self.producer.send(t, json.dumps(message.asdict()).encode("utf-8"))
+        self.producer.send(
+            message.queue_name, json.dumps(message.asdict()).encode("utf-8")
+        )
         self.producer.flush()
         return message
 
