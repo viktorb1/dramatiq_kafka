@@ -7,7 +7,7 @@ from dramatiq.broker import get_broker
 
 def send_message(request):
     message = Message(
-        queue_name="rita",  # specify which kafka queue to write to
+        queue_name="bob",  # specify which kafka queue to write to
         actor_name="email_customer",  # specify which function should run
         args=("testing@gmail.com",),  # specify function arguments
         kwargs={},
