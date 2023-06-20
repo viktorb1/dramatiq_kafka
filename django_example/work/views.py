@@ -7,7 +7,7 @@ from dramatiq.broker import get_broker
 
 def send_message(request):
     message = Message(
-        queue_name="testdramatiq_topic",
+        queue_name="rita",
         actor_name="email_customer",
         args=("testing@gmail.com",),
         kwargs={},
