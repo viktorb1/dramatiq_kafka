@@ -15,5 +15,6 @@ def send_message(request):
     )
 
     broker = get_broker()
-    broker.enqueue(message)
+    print(broker.topic)
+    # broker.enqueue(message)
     return HttpResponse("success")

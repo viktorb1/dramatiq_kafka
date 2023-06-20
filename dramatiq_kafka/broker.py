@@ -5,6 +5,7 @@ from kafka import KafkaProducer, KafkaConsumer, TopicPartition
 from dramatiq import Consumer, Message, Broker, Middleware, MessageProxy
 from collections import deque
 import json
+from time import sleep
 
 
 class KafkaBroker(Broker):
@@ -47,8 +48,18 @@ class KafkaBroker(Broker):
     def declare_queue(self, queue_name: str) -> None:
         self.queues.append(queue_name)
 
-    def enqueue(self, message: Message, *, delay: Optional[int] = None) -> Message:
-        self.producer.send(self.topic, json.dumps(message.asdict()).encode("utf-8"))
+    def enqueue(
+        self,
+        message: Message,
+        *,
+        delay: Optional[int] = None,
+        topic: Optional[str] = None,
+    ) -> Message:
+        if delay:
+            sleep(delay)
+
+        t = topic if topic else self.topic
+        self.producer.send(t, json.dumps(message.asdict()).encode("utf-8"))
         self.producer.flush()
         return message
 
