@@ -23,18 +23,19 @@ broker = KafkaBroker(
 dramatiq.set_broker(broker)
 ```
 
-Use dramatiq to send a message to a Kafka topic with the following format:
+Use dramatiq to send a message to a Kafka topic (`queue_name`) as usual:
 
 ```python
-{
-    "queue_name": "testdramatiq_topic",
-    "actor_name": "email_customer",
-    "args": ["testing@gmail.com"],
-    "kwargs": {},
-    "options": {},
-    "message_id": "e566b8d8-4e3d-437d-989f-939dd4f8ee04",
-    "message_timestamp": 1686877955147
-}
+    message = Message(
+        queue_name="rita",
+        actor_name="email_customer",
+        args=("testing@gmail.com",),
+        kwargs={},
+        options={},
+    )
+
+    broker = get_broker()
+    broker.enqueue(message)
 ```
 
 Write tasks as described in django_dramatiq's documentation (i.e. create dramatiq actors in the task.py files) and modify settings as shown in `django_example` to get started. To send messages, view the views.py file for an example
