@@ -129,7 +129,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DRAMATIQ_BROKER = {
     "BROKER": "dramatiq_kafka.KafkaBroker",
     "OPTIONS": {
-        "bootstrap_servers": "localhost:9092",
+        "bootstrap_servers": "localhost:9094",
         "topic": "rita",
         "group_id": "rita_consumergroup",
     },
